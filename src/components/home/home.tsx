@@ -1,106 +1,140 @@
-import { Logout, PersonAdd, Settings } from '@mui/icons-material';
-import { Avatar, Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip, Typography} from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { DataFromLogin, Office } from "../../interfaces";
+import { officeByID } from "../../constants";
+import { Button, Card, Grid2, Link, CardMedia } from "@mui/material";
+import logo from "../../assets/KlinicalLogo.png";
+import findPatientImg from "../../assets/Find Patient.png";
+import viewPatientsImg from "../../assets/View Patients.png";
+import adminImg from "../../assets/Admin.png";
+import myProfileImg from "../../assets/My Profile.png";
 
-function Home(dataFromLogin: any) {
-  
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+//https://dvmhn07.medium.com/passing-data-between-parent-and-child-components-in-react-part-b405116c470e
 
-  useEffect(() => {
-    console.log("Data in Home", dataFromLogin);
-  }, [dataFromLogin]);
+function Home(props: { dataFromLogin: DataFromLogin }) {
+	const [office, setOffice] = useState<Office>();
+	const [dataFromLogin, setDataFromLogin] = useState<DataFromLogin>();
 
-  return (
-    <>
-      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-        <Typography sx={{ minWidth: 100 }}>Profile</Typography>
-        <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-          </IconButton>
-        </Tooltip>
-      </Box>
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        slotProps={{
-          paper: {
-            elevation: 0,
-            sx: {
-              overflow: 'visible',
-              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-              mt: 1.5,
-              '& .MuiAvatar-root': {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1,
-              },
-              '&::before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: 'background.paper',
-                transform: 'translateY(-50%) rotate(45deg)',
-                zIndex: 0,
-              },
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Menu>
-    </>
-  )
+	useEffect(() => {
+		if (props.dataFromLogin == undefined) return;
+		setDataFromLogin(props.dataFromLogin);
+		console.log("Data in Home", props.dataFromLogin);
+
+		const requestOptions = {
+			method: "GET",
+			headers: { "Content-Type": "application/json", Authorization: "Bearer " + props.dataFromLogin.token },
+		};
+
+		fetch(officeByID + props.dataFromLogin.person?.office, requestOptions)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("office", data);
+				setOffice(data);
+			});
+	}, [props.dataFromLogin]);
+
+	return (
+		<>
+			<Grid2 container spacing={2}>
+				<Grid2 size={8} style={{ textAlign: "left" }}>
+					<img src={logo} style={{ maxHeight: "5rem", maxWidth: "5rem" }} />
+				</Grid2>
+				<Grid2 size={4} style={{ textAlign: "right" }}>
+					<Link
+						component="button"
+						variant="body2"
+						onClick={() => {
+							console.info("I'm a button.");
+						}}
+					>
+						Log out {dataFromLogin !== undefined ? dataFromLogin.userAccess?.username : <></>}
+					</Link>
+				</Grid2>
+				{/* Home */}
+					{/* Functions */}
+					<Grid2 size={6}>
+						<Card variant="outlined">
+							<Grid2 size={12}>
+								<CardMedia
+									component="img"
+									image={viewPatientsImg}
+									alt="View Patients"
+									style={{
+										maxHeight: "10rem",
+										objectFit: "contain",
+										paddingTop: "2rem",
+										paddingBottom: "2rem",
+									}}
+								/>
+							</Grid2>
+							<Grid2 size={12} style={{ textAlign: "center" }}>
+								<Button size="large">View Patients</Button>
+							</Grid2>
+						</Card>
+					</Grid2>
+					<Grid2 size={6}>
+						<Card variant="outlined">
+							<Grid2 size={12}>
+								<CardMedia
+									component="img"
+									image={findPatientImg}
+									alt="Find Patient"
+									style={{
+										maxHeight: "10rem",
+										objectFit: "contain",
+										paddingTop: "2rem",
+										paddingBottom: "2rem",
+									}}
+								/>
+							</Grid2>
+							<Grid2 size={12} style={{ textAlign: "center" }}>
+								<Button size="large">Find Patient</Button>
+							</Grid2>
+						</Card>
+					</Grid2>
+					{/* Settings */}
+					<Grid2 size={6}>
+						<Card variant="outlined">
+							<Grid2 size={12}>
+								<CardMedia
+									component="img"
+									image={myProfileImg}
+									alt="Find Patient"
+									style={{
+										maxHeight: "10rem",
+										objectFit: "contain",
+										paddingTop: "2rem",
+										paddingBottom: "2rem",
+									}}
+								/>
+							</Grid2>
+							<Grid2 size={12} style={{ textAlign: "center" }}>
+								<Button size="large">My Profile</Button>
+							</Grid2>
+						</Card>
+					</Grid2>
+					<Grid2 size={6}>
+						<Card variant="outlined">
+							<Grid2 size={12}>
+								<CardMedia
+									component="img"
+									image={adminImg}
+									alt="Find Patient"
+									style={{
+										maxHeight: "10rem",
+										objectFit: "contain",
+										paddingTop: "2rem",
+										paddingBottom: "2rem",
+									}}
+								/>
+							</Grid2>
+							<Grid2 size={12} style={{ textAlign: "center" }}>
+								<Button size="large">Settings</Button>
+							</Grid2>
+						</Card>
+					</Grid2>
+			</Grid2>
+		</>
+	);
 }
 
-export default Home
-
+export default Home;
