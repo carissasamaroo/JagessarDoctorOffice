@@ -1,4 +1,4 @@
-import { Typography, Grid2, TextField, Button } from "@mui/material";
+import { Typography, Grid, TextField, Button } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { login, personByID } from "../../constants";
 import { DataFromLogin } from "../../interfaces";
@@ -71,11 +71,11 @@ function Login(props: { sendDataToApp: (arg0: DataFromLogin) => void }) {
 
 	return (
 		<>
-			<Grid2 container spacing={2}>
-				<Grid2 size={12} style={{ textAlign: "center" }}>
+			<Grid container spacing={2}>
+				<Grid item md={12} style={{ textAlign: "center" }}>
 					<img src={logo} style={{ maxHeight: "20rem", maxWidth: "20rem" }} />
-				</Grid2>
-				<Grid2 size={12}>
+				</Grid>
+				<Grid item md={12}>
 					<TextField
 						required
 						label="Username"
@@ -83,8 +83,8 @@ function Login(props: { sendDataToApp: (arg0: DataFromLogin) => void }) {
 						style={{ width: "20rem" }}
 						onChange={handleUsernameOnChange}
 					/>
-				</Grid2>
-				<Grid2 size={12}>
+				</Grid>
+				<Grid item md={12}>
 					<TextField
 						required
 						label="Password"
@@ -93,8 +93,8 @@ function Login(props: { sendDataToApp: (arg0: DataFromLogin) => void }) {
 						style={{ width: "20rem" }}
 						onChange={handlePasswordOnChange}
 					/>
-				</Grid2>
-				<Grid2 size={12} style={{ textAlign: "center" }}>
+				</Grid>
+				<Grid item md={12} style={{ textAlign: "center" }}>
 					<Button
 						variant="contained"
 						style={{ backgroundColor: "#151269" }}
@@ -103,13 +103,13 @@ function Login(props: { sendDataToApp: (arg0: DataFromLogin) => void }) {
 					>
 						Login
 					</Button>
-				</Grid2>
-				<Grid2 size={12} style={{ textAlign: "center" }}>
+				</Grid>
+				<Grid item md={12} style={{ textAlign: "center" }}>
 					<Typography variant="subtitle1" color="error">
 						{error}
 					</Typography>
-				</Grid2>
-			</Grid2>
+				</Grid>
+			</Grid>
 		</>
 	);
 }

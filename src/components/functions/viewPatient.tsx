@@ -71,7 +71,7 @@ function a11yProps(index: number) {
 	};
 }
 
-function AddPatient(props: { dataFromLogin: DataFromLogin }) {
+function ViewPatient(props: { dataFromLogin: DataFromLogin }) {
 	const [view, setView] = useState(0);
 
 	const [email, setEmail] = useState("");
@@ -812,4 +812,4 @@ function AddPatient(props: { dataFromLogin: DataFromLogin }) {
 	);
 }
 
-export default AddPatient;
+export default ViewPatient;
